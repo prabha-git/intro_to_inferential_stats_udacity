@@ -1,7 +1,8 @@
 ---
-title: "Into to Inferential Statistics"
-output: html_notebook
-editor_options: 
+title: "Into_to_Inferential_Statistics"
+output:
+  html_document: default
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -12,6 +13,7 @@ Having 40 is good Klout score.
 
 ```{r message=FALSE, warning=FALSE}
 library(tidyverse)
+library(ggpubr)
 ```
 
 Reading the data
@@ -29,6 +31,11 @@ Below histograms shows distribution is bimodal
 ggplot(klout_data,aes(x=score))+geom_histogram(bins=40)
 ```
 
+lets confirm using qqplot (confirms this is not normal distribution)
+```{r}
+ggqqplot(klout_data$score)
+```
+
 
 As per [Central Limit therom](https://en.wikipedia.org/wiki/Central_limit_theorem) , mean of random samples from the distribution is normally distributed.
 
@@ -43,6 +50,46 @@ for (i in 1:1000){
 ggplot(data.frame(dist_mean=sample_mean),aes(x=dist_mean))+geom_histogram()
 ```
 
+using qqplot lets confirm if this is normally distributes
+```{r}
+ggqqplot(sample_mean)
+```
+
+
+while visually inspecting it looks like above plot is normally distributed. Lets also use shapiro test
+```{r}
+shapiro.test(sample_mean)
+```
+
 
 As per central limit therom , sample distribution mean is same as population mean
-$$\mu=\alpha$$
+$$\mu_{sample distribution} \approx \mu_{population}$$
+if the sample size is N , then sample distribution sd is as below
+$$\sigma_{sampledistribution}\approx\sigma/\sqrt{N}$$
+ Lets validate the above formulas using the Klout dat awe have 
+ 
+ Population standard deviation
+```{r}
+population_sd=sd(klout_data$score)
+
+cat("population standard deviation is ",population_sd)
+```
+
+Sample distribution
+```{r}
+sample_distribution_sd=sd(sample_mean)
+
+cat("Sample distribution standard deviation is ",sample_distribution_sd)
+```
+
+Lets validate the formula 
+$$\sigma_{sampledistribution}\approx\sigma/\sqrt{N}$$
+Below calculation validates the above formula .
+```{r}
+population_sd/sqrt(35)
+```
+
+```{r}
+qqnorm(klout_data$score)
+```
+
