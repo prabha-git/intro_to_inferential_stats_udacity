@@ -1,0 +1,48 @@
+---
+title: "Into to Inferential Statistics"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+Lesson 1
+
+Klout score example - Online score (1 -99) credit score for online reputation . Klout score follows bimodal distribution .
+Having 40 is good Klout score.
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+Reading the data
+```{r}
+klout_data=read_csv('datasets/klout_score.csv')
+```
+
+summary statistics
+```{r}
+summary(klout_data)
+```
+
+Below histograms shows distribution is bimodal
+```{r}
+ggplot(klout_data,aes(x=score))+geom_histogram(bins=40)
+```
+
+
+As per [Central Limit therom](https://en.wikipedia.org/wiki/Central_limit_theorem) , mean of random samples from the distribution is normally distributed.
+
+```{r}
+sample_mean=c()
+
+# taking the 35 sample 1000 times taking the average and saving it in the variable.
+for (i in 1:1000){
+  sample_mean=c(sample_mean,mean(sample(klout_data$score,35,replace=TRUE)))
+}
+
+ggplot(data.frame(dist_mean=sample_mean),aes(x=dist_mean))+geom_histogram()
+```
+
+
+As per central limit therom , sample distribution mean is same as population mean
+$$\mu=\alpha$$
